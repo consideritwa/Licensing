@@ -42,7 +42,6 @@
     <a class="skip-link" href="#settings">Skip to main content</a>
     <h1>Settings</h1>
 
-    <div id="offline">OFFLINE</div>
     <div id="menu"><a href="/" class="home-link">Home</a></div>
 
     <div id="settings" class="settings-collection">
@@ -51,7 +50,8 @@
       <div class="settings-values">
         <input id="highlight1" type="color" title="Highlight on Click" />
         <input id="highlight2" type="color" title="Highlight on Shift + Click" />
-        <input id="highlight3" type="color" title="Highlight on Control + Click" />
+        <input id="highlight3" type="color" title="Highlight on Ctrl + Click" />
+        <input id="highlight4" type="color" title="Highlight on Ctrl + Shift + Click" />
       </div>
       <div class="divider"></div>
       <h2 class="settings-header menu"><label for="menu-state">Menu</label></h2>
@@ -78,13 +78,14 @@
           <option>Fit Width</option>
           <option>Fit Height</option>
           <option>Fill</option>
+          <option>Original</option>
         </select>
       </div>
       <div class="divider"></div>
     </div>
 
-    <button id="defaults" title="Apply default settings">Default</button>
-    <button id="save" title="Save settings">Save</button>
-    <button id="cancel" title="Cancel changes">Cancel</button>
+    <button type="button" id="defaults" title="Apply default settings">Default</button>
+    <button type="button" id="save" title="Save settings">Save</button>
+    <button type="button" id="cancel" title="Cancel changes">Cancel</button>
   </body>
 </html>

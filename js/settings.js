@@ -1,27 +1,29 @@
 /// <reference path="common.js" />
 /* global Settings, saveSettings, isEmbedded, setTheme, setupModal,
-   defaultSettings, setupOfflineIndicator */
+   defaultSettings, backOrHome, showModalDialog */
 
 /** Save click event to commit changes. */
 function saveClick() {
   Settings.Highlight1 = document.getElementById('highlight1').value;
   Settings.Highlight2 = document.getElementById('highlight2').value;
   Settings.Highlight3 = document.getElementById('highlight3').value;
+  Settings.Highlight4 = document.getElementById('highlight4').value;
   Settings.Menu = document.getElementById('menu-state').value;
   Settings.Theme = document.getElementById('theme').value;
   Settings.Zoom = document.getElementById('zoom').value;
 
   saveSettings();
 
-  if (!isEmbedded()) {
-    window.history.back();
+  if (isEmbedded()) {
+    showModalDialog('Settings saved.', false, undefined, 'OK');
+  }
+  else {
+    backOrHome();
   }
 }
 
-/**
- * Set the selected option by the supplied label
- * @returns true if option found and selected, otherwise false.
- */
+/** Set the selected option by the supplied label
+ *  @returns true if option found and selected, otherwise false. */
 function selectByLabel(select, label) {
   for (const option of select.options) {
     if (option.label === label) {
@@ -38,6 +40,7 @@ function setControlValues() {
   document.getElementById('highlight1').value = Settings.Highlight1;
   document.getElementById('highlight2').value = Settings.Highlight2;
   document.getElementById('highlight3').value = Settings.Highlight3;
+  document.getElementById('highlight4').value = Settings.Highlight4;
 
   selectByLabel(document.getElementById('menu-state'), Settings.Menu);
   selectByLabel(document.getElementById('zoom'), Settings.Zoom);
@@ -55,8 +58,7 @@ function defaultsClick() {
 function setupEventListeners() {
   document.getElementById('defaults').addEventListener('click', defaultsClick);
   document.getElementById('save').addEventListener('click', saveClick);
-  document.getElementById('cancel').addEventListener('click', 
-    () => window.history.back());
+  document.getElementById('cancel').addEventListener('click', backOrHome);
   document.getElementById('theme').addEventListener('change',
     (event) => setTheme(event.target.value));
 }
@@ -68,7 +70,6 @@ function DOMContentLoaded() {
     document.getElementById('cancel').style.display = 'none';
   }
 
-  setupOfflineIndicator();
   setupModal();
   setControlValues();
   setupEventListeners();

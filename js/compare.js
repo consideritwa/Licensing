@@ -1,11 +1,10 @@
 /// <reference path="common.js" />
-/* global modalAlert, StoreName, isEmbedded, setupOfflineIndicator
-   setupModal */
+/* global showModalDialog, StoreName, isEmbedded, setupModal */
 
 /** Get the values of the selected checkboxes. */
 function getSelectedCheckboxes() {
   const checked = document.querySelectorAll('input[type="checkbox"]:checked');
-  let values = [];
+  const values = [];
   checked.forEach(function getCheckboxValue(element) {
     values.push(element.value);
   });
@@ -19,14 +18,15 @@ function compareClick() {
   if (checkboxes.length === 2) {
     window.location.href = '/comparing.htm#' + checkboxes.join('/');
   } else {
-    modalAlert('You must select two diagrams to compare.');
+    showModalDialog(
+      'You must select two diagrams to compare.', false, undefined, 'OK');
   }
 }
 
 /** Disable all the checkboxes that are not currently checked. */
 function disableUncheckedBoxes() {
-  const checkboxes = document
-    .querySelectorAll('input[type="checkbox"]:not(:checked):not(:disabled)');
+  const checkboxes = document.
+    querySelectorAll('input[type="checkbox"]:not(:checked):not(:disabled)');
 
   checkboxes.forEach(function disableEachCheckbox(checkbox) {
     checkbox.disabled = true;
@@ -36,8 +36,8 @@ function disableUncheckedBoxes() {
 
 /** Enable all the checkboxes that are not currently checked. */
 function enableUncheckedBoxes() {
-  const checkboxes = document
-    .querySelectorAll('input[type="checkbox"]:not(:checked):disabled');
+  const checkboxes = document.
+    querySelectorAll('input[type="checkbox"]:not(:checked):disabled');
 
   checkboxes.forEach(function enableEachCheckbox(checkbox) {
     checkbox.disabled = false;
@@ -48,7 +48,6 @@ function enableUncheckedBoxes() {
 /** Event handled for checkbox state changes. */
 function checkboxChanged() {
   const checkboxes = getSelectedCheckboxes();
-
   if (checkboxes.length === 2) {
     disableUncheckedBoxes();
   } else {
@@ -60,14 +59,13 @@ function checkboxChanged() {
 function addDiagram(container, key, entry) {
   const checkbox = document.createElement('input');
   checkbox.type = 'checkbox';
-  checkbox.value = '*' + key;
+  checkbox.value = `*${key}`;
 
   const label = document.createElement('label');
   label.appendChild(checkbox);
   label.append(entry.Title);
 
   container.appendChild(label);
-  // container.insertAdjacentElement('afterend', label);
 }
 
 /** Adds the saved diagrams to the bottom of the diagram list. */
@@ -77,16 +75,15 @@ function addSavedDiagrams() {
   let keys = [];
   for (let index = 0; index < localStorage.length; index += 1) {
     const key = localStorage.key(index);
-    if (key !== StoreName.Flags && key !== StoreName.Settings) {
+    if (key !== StoreName.Flags &&
+        key !== StoreName.Settings &&
+        key !== StoreName.MatrixSelection) {
       keys.push(key);
     }
   }
 
   if (keys.length === 0) {
     container.append('There are no saved diagrams.');
-    // const message = document.createElement('label');
-    // message.append('None');
-    // container.insertAdjacentElement('afterend', message);
   } else {
     keys = keys.sort(
       function keysSort(a, b) {
@@ -108,9 +105,7 @@ function addSavedDiagrams() {
 
 /** Attaches event listeners to all checkboxes. */
 function setupCheckboxes() {
-  const checkboxes = document
-    .querySelectorAll('input[type="checkbox"]');
-
+  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
   checkboxes.forEach(function setupEachCheckbox(checkbox) {
     checkbox.addEventListener('change', checkboxChanged);
   });
@@ -122,13 +117,12 @@ function DOMContentLoaded() {
     document.getElementById('menu').style.display = 'none';
   }
 
-  setupOfflineIndicator();
   setupModal();
   addSavedDiagrams();
   setupCheckboxes();
 
-  document.getElementById('button-compare')
-    .addEventListener('click', compareClick);
+  document.getElementById('button-compare').
+    addEventListener('click', compareClick);
 }
 
 document.addEventListener('DOMContentLoaded', DOMContentLoaded);
